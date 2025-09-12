@@ -131,12 +131,15 @@ const Layout = () => {
               </button>
 
               {/* User Profile - Desktop Only */}
-              <div className="hidden lg:flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-all duration-200 cursor-pointer">
+              <Link
+                to="/profile"
+                className="hidden lg:flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-all duration-200"
+              >
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
                   <span className="text-white text-sm font-medium">U</span>
                 </div>
-                <span className="text-sm font-medium">User</span>
-              </div>
+                <span className="text-sm font-medium">Profile</span>
+              </Link>
 
               {/* Mobile menu button - Enhanced */}
               <button
@@ -212,12 +215,16 @@ const Layout = () => {
                     </svg>
                     <span className="text-sm font-medium">Search</span>
                   </button>
-                  <button className="flex items-center justify-center space-x-2 px-3 py-3 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl transition-colors duration-200">
+                  <Link
+                    to="/profile"
+                    className="flex items-center justify-center space-x-2 px-3 py-3 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl transition-colors duration-200"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
                       <span className="text-white text-xs font-bold">U</span>
                     </div>
                     <span className="text-sm font-medium">Profile</span>
-                  </button>
+                  </Link>
                 </div>
               </div>
 

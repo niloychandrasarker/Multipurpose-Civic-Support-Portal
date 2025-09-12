@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import FormField from "../components/FormField";
 import Modal from "../components/Modal";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("");
@@ -109,6 +111,14 @@ const AdminDashboard = () => {
     setModalType("");
   };
 
+  const viewCase = (caseData) => {
+    navigate(`/admin/cases/${caseData.id}`);
+  };
+
+  const viewUser = (userData) => {
+    navigate(`/admin/users/${userData.id}`);
+  };
+
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case "resolved":
@@ -167,7 +177,55 @@ const AdminDashboard = () => {
 
       {/* Recent Activity */}
       <Card title="Recent Activity">
-        <div className="overflow-x-auto">
+        {/* Mobile View - Card Layout */}
+        <div className="sm:hidden space-y-4">
+          {recentCases.slice(0, 5).map((case_, index) => (
+            <div key={index} className="border rounded-lg p-4 bg-gray-50">
+              <div className="flex justify-between items-start mb-2">
+                <div>
+                  <p className="font-semibold text-gray-900">{case_.id}</p>
+                  <p className="text-sm text-gray-600">{case_.type}</p>
+                </div>
+                <span
+                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(
+                    case_.priority
+                  )}`}
+                >
+                  {case_.priority}
+                </span>
+              </div>
+              <div className="space-y-1 mb-3">
+                <p className="text-sm">
+                  <span className="font-medium">User:</span> {case_.user}
+                </p>
+                <p className="text-sm">
+                  <span className="font-medium">Date:</span> {case_.date}
+                </p>
+                <div className="flex items-center">
+                  <span className="font-medium text-sm mr-2">Status:</span>
+                  <span
+                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+                      case_.status
+                    )}`}
+                  >
+                    {case_.status}
+                  </span>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full"
+                onClick={() => viewCase(case_)}
+              >
+                View Details
+              </Button>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop View - Table Layout */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -177,16 +235,16 @@ const AdminDashboard = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Type
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   User
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Priority
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -203,7 +261,7 @@ const AdminDashboard = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {case_.type}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {case_.user}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -215,7 +273,7 @@ const AdminDashboard = () => {
                       {case_.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(
                         case_.priority
@@ -224,11 +282,15 @@ const AdminDashboard = () => {
                       {case_.priority}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {case_.date}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <Button variant="ghost" size="sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => viewCase(case_)}
+                    >
                       View
                     </Button>
                   </td>
@@ -265,13 +327,95 @@ const AdminDashboard = () => {
 
   const renderCases = () => (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <h2 className="text-2xl font-bold text-gray-900">Case Management</h2>
-        <Button onClick={() => openModal("addCase")}>Add New Case</Button>
+        <Button
+          onClick={() => openModal("addCase")}
+          className="w-full sm:w-auto"
+        >
+          Add New Case
+        </Button>
       </div>
 
       <Card>
-        <div className="overflow-x-auto">
+        {/* Mobile View - Card Layout */}
+        <div className="sm:hidden space-y-4">
+          {recentCases.map((case_, index) => (
+            <div key={index} className="border rounded-lg p-4 bg-gray-50">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <p className="font-semibold text-gray-900">{case_.id}</p>
+                  <p className="text-sm text-gray-600">{case_.type}</p>
+                </div>
+                <span
+                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(
+                    case_.priority
+                  )}`}
+                >
+                  {case_.priority}
+                </span>
+              </div>
+
+              <div className="space-y-2 mb-4">
+                <p className="text-sm">
+                  <span className="font-medium">User:</span> {case_.user}
+                </p>
+                <p className="text-sm">
+                  <span className="font-medium">Date:</span> {case_.date}
+                </p>
+
+                <div className="flex flex-col space-y-2">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Status
+                    </label>
+                    <select className="w-full text-sm border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      <option value={case_.status}>{case_.status}</option>
+                      <option value="Under Review">Under Review</option>
+                      <option value="Investigation">Investigation</option>
+                      <option value="Resolved">Resolved</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Priority
+                    </label>
+                    <select className="w-full text-sm border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                      <option value={case_.priority}>{case_.priority}</option>
+                      <option value="High">High</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Low">Low</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => viewCase(case_)}
+                >
+                  View Details
+                </Button>
+                <div className="flex space-x-2">
+                  <Button variant="ghost" size="sm" className="flex-1">
+                    Edit
+                  </Button>
+                  <Button variant="danger" size="sm" className="flex-1">
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop View - Table Layout */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -281,16 +425,16 @@ const AdminDashboard = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Type
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   User
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Priority
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -307,11 +451,11 @@ const AdminDashboard = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {case_.type}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {case_.user}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <select className="text-xs border rounded px-2 py-1">
+                    <select className="text-xs border rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                       <option value={case_.status}>{case_.status}</option>
                       <option value="Under Review">Under Review</option>
                       <option value="Investigation">Investigation</option>
@@ -319,26 +463,39 @@ const AdminDashboard = () => {
                       <option value="Closed">Closed</option>
                     </select>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <select className="text-xs border rounded px-2 py-1">
+                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap">
+                    <select className="text-xs border rounded px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                       <option value={case_.priority}>{case_.priority}</option>
                       <option value="High">High</option>
                       <option value="Medium">Medium</option>
                       <option value="Low">Low</option>
                     </select>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {case_.date}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm">
-                        Edit
-                      </Button>
-                      <Button variant="ghost" size="sm">
+                    <div className="flex space-x-1 lg:space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs lg:text-sm"
+                        onClick={() => viewCase(case_)}
+                      >
                         View
                       </Button>
-                      <Button variant="danger" size="sm">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs lg:text-sm"
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="text-xs lg:text-sm"
+                      >
                         Delete
                       </Button>
                     </div>
@@ -354,13 +511,68 @@ const AdminDashboard = () => {
 
   const renderUsers = () => (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
-        <Button onClick={() => openModal("addUser")}>Add New User</Button>
+        <Button
+          onClick={() => openModal("addUser")}
+          className="w-full sm:w-auto"
+        >
+          Add New User
+        </Button>
       </div>
 
       <Card>
-        <div className="overflow-x-auto">
+        {/* Mobile View - Card Layout */}
+        <div className="sm:hidden space-y-4">
+          {users.map((user) => (
+            <div key={user.id} className="border rounded-lg p-4 bg-gray-50">
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <p className="font-semibold text-gray-900">{user.name}</p>
+                  <p className="text-sm text-gray-600">{user.email}</p>
+                </div>
+                <span
+                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+                    user.status
+                  )}`}
+                >
+                  {user.status}
+                </span>
+              </div>
+
+              <div className="space-y-1 mb-4">
+                <p className="text-sm">
+                  <span className="font-medium">Phone:</span> {user.phone}
+                </p>
+                <p className="text-sm">
+                  <span className="font-medium">Joined:</span> {user.joinDate}
+                </p>
+              </div>
+
+              <div className="flex flex-col space-y-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => viewUser(user)}
+                >
+                  View Profile
+                </Button>
+                <div className="flex space-x-2">
+                  <Button variant="ghost" size="sm" className="flex-1">
+                    Edit
+                  </Button>
+                  <Button variant="danger" size="sm" className="flex-1">
+                    Deactivate
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop View - Table Layout */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -370,13 +582,13 @@ const AdminDashboard = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Email
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Phone
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Join Date
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -393,7 +605,7 @@ const AdminDashboard = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {user.email}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {user.phone}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -405,18 +617,31 @@ const AdminDashboard = () => {
                       {user.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {user.joinDate}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex space-x-2">
-                      <Button variant="ghost" size="sm">
+                    <div className="flex space-x-1 lg:space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs lg:text-sm"
+                      >
                         Edit
                       </Button>
-                      <Button variant="ghost" size="sm">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs lg:text-sm"
+                        onClick={() => viewUser(user)}
+                      >
                         View
                       </Button>
-                      <Button variant="danger" size="sm">
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="text-xs lg:text-sm"
+                      >
                         Deactivate
                       </Button>
                     </div>
@@ -646,21 +871,35 @@ const AdminDashboard = () => {
         </p>
       </div>
 
-      {/* Tab Navigation */}
+      {/* Tab Navigation - Mobile Responsive */}
       <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
+        <div className="sm:hidden">
+          <select
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md"
+          >
+            {tabs.map((tab) => (
+              <option key={tab.id} value={tab.id}>
+                {tab.icon} {tab.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <nav className="hidden sm:flex -mb-px space-x-2 lg:space-x-8 overflow-x-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
                 activeTab === tab.id
                   ? "border-blue-500 text-blue-600"
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               }`}
             >
               <span className="mr-2">{tab.icon}</span>
-              {tab.name}
+              <span className="hidden lg:inline">{tab.name}</span>
+              <span className="lg:hidden">{tab.name.split(" ")[0]}</span>
             </button>
           ))}
         </nav>
@@ -673,7 +912,14 @@ const AdminDashboard = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
-        title={modalType === "addCase" ? "Add New Case" : "Add New User"}
+        size="md"
+        title={
+          modalType === "addCase"
+            ? "Add New Case"
+            : modalType === "addUser"
+            ? "Add New User"
+            : "Modal"
+        }
       >
         {renderModalContent()}
       </Modal>

@@ -8,6 +8,9 @@ import FinePayment from "./pages/FinePayment";
 import Chatbot from "./pages/Chatbot";
 import SupportContacts from "./pages/SupportContacts";
 import AdminDashboard from "./pages/AdminDashboard";
+import CaseDetails from "./pages/CaseDetails";
+import UserProfile from "./pages/UserProfile";
+import Profile from "./pages/Profile";
 import "./App.css";
 
 function App() {
@@ -23,6 +26,9 @@ function App() {
           <Route path="chatbot" element={<Chatbot />} />
           <Route path="support" element={<SupportContacts />} />
           <Route path="admin" element={<AdminDashboard />} />
+          <Route path="admin/cases/:id" element={<CaseDetails />} />
+          <Route path="admin/users/:id" element={<UserProfile />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </Router>
