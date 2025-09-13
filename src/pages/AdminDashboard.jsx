@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import FormField from "../components/FormField";
 import Modal from "../components/Modal";
+import { getIssuesByVotes, ISSUE_STATUS } from "../data/issuesData";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("");
+  const [citizenReports, setCitizenReports] = useState([]);
+
+  // Load citizen reports on component mount
+  useEffect(() => {
+    const reports = getIssuesByVotes();
+    setCitizenReports(reports);
+  }, []);
 
   // Mock data
   const stats = [
@@ -119,6 +127,16 @@ const AdminDashboard = () => {
     navigate(`/admin/users/${userData.id}`);
   };
 
+  // Citizen Reports Functions
+  const loadCitizenReports = () => {
+    const reports = getIssuesByVotes();
+    setCitizenReports(reports);
+  };
+
+  const viewReportDetails = (report) => {
+    navigate(`/admin/reports/${report.id}`);
+  };
+
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case "resolved":
@@ -153,6 +171,7 @@ const AdminDashboard = () => {
   const tabs = [
     { id: "overview", name: "Overview", icon: "📊" },
     { id: "cases", name: "Manage Cases", icon: "📁" },
+    { id: "citizen-reports", name: "Citizen Reports", icon: "🏢" },
     { id: "users", name: "Manage Users", icon: "👥" },
     { id: "analytics", name: "Analytics", icon: "📈" },
     { id: "settings", name: "Settings", icon: "⚙️" },
@@ -655,6 +674,168 @@ const AdminDashboard = () => {
     </div>
   );
 
+  const renderCitizenReports = () => {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <h2 className="text-2xl font-bold text-gray-900">
+            নাগরিক রিপোর্ট ম্যানেজমেন্ট
+          </h2>
+          <Button
+            onClick={loadCitizenReports}
+            variant="ghost"
+            className="w-full sm:w-auto"
+          >
+            🔄 রিফ্রেশ
+          </Button>
+        </div>
+
+        <Card>
+          {/* Mobile View - Card Layout */}
+          <div className="sm:hidden space-y-4">
+            {citizenReports.map((report) => (
+              <div key={report.id} className="border rounded-lg p-4 bg-gray-50">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <p className="font-semibold text-gray-900">
+                      {report.title}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {report.location.address}
+                    </p>
+                  </div>
+                  <span
+                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+                      report.status
+                    )}`}
+                  >
+                    {report.status}
+                  </span>
+                </div>
+
+                <div className="space-y-1 mb-4">
+                  <p className="text-sm">
+                    <span className="font-medium">রিপোর্টার:</span>{" "}
+                    {report.reportedBy.name}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-medium">ক্যাটেগরি:</span>{" "}
+                    {report.category}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-medium">ভোট:</span>{" "}
+                    {report.votes.total} ({report.votes.upvotes}↑{" "}
+                    {report.votes.downvotes}↓)
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-medium">তারিখ:</span>{" "}
+                    {new Date(report.createdAt).toLocaleDateString("bn-BD")}
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => viewReportDetails(report)}
+                  >
+                    বিস্তারিত দেখুন
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop View - Table Layout */}
+          <div className="hidden sm:block overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    রিপোর্ট ID
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    শিরোনাম
+                  </th>
+                  <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    রিপোর্টার
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    স্ট্যাটাস
+                  </th>
+                  <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    ক্যাটেগরি
+                  </th>
+                  <th className="hidden lg:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    ভোট
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    অ্যাকশন
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {citizenReports.map((report) => (
+                  <tr key={report.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {report.id}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {report.title}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {report.location.address}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {report.reportedBy.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+                          report.status
+                        )}`}
+                      >
+                        {report.status}
+                      </span>
+                    </td>
+                    <td className="hidden md:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {report.category}
+                    </td>
+                    <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {report.votes.total} ({report.votes.upvotes}↑{" "}
+                      {report.votes.downvotes}↓)
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => viewReportDetails(report)}
+                      >
+                        বিস্তারিত
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {citizenReports.length === 0 && (
+            <div className="text-center py-8">
+              <div className="text-4xl mb-4">📋</div>
+              <p className="text-gray-500">কোন নাগরিক রিপোর্ট পাওয়া যায়নি</p>
+            </div>
+          )}
+        </Card>
+      </div>
+    );
+  };
+
   const renderAnalytics = () => (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h2>
@@ -714,9 +895,17 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card title="General Settings">
           <div className="space-y-4">
-            <FormField label="System Name" value="Civic Support Portal" />
-            <FormField label="Admin Email" value="admin@civicportal.gov" />
-            <FormField label="Support Phone" value="+91-11-12345678" />
+            <FormField
+              label="System Name"
+              value="Civic Support Portal"
+              readOnly
+            />
+            <FormField
+              label="Admin Email"
+              value="admin@civicportal.gov"
+              readOnly
+            />
+            <FormField label="Support Phone" value="+91-11-12345678" readOnly />
             <Button>Update Settings</Button>
           </div>
         </Card>
@@ -727,6 +916,7 @@ const AdminDashboard = () => {
               label="Session Timeout (minutes)"
               value="30"
               type="number"
+              readOnly
             />
             <FormField label="Password Policy" type="select">
               <option>Strong (recommended)</option>
@@ -849,6 +1039,8 @@ const AdminDashboard = () => {
         return renderOverview();
       case "cases":
         return renderCases();
+      case "citizen-reports":
+        return renderCitizenReports();
       case "users":
         return renderUsers();
       case "analytics":

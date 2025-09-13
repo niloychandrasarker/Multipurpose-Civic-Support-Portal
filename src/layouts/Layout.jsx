@@ -18,6 +18,16 @@ const Layout = () => {
       current: location.pathname === "/dashboard",
     },
     {
+      name: "Report Issue",
+      href: "/report-issue",
+      current: location.pathname === "/report-issue",
+    },
+    {
+      name: "Track Issues",
+      href: "/issues",
+      current: location.pathname === "/issues",
+    },
+    {
       name: "GD Filing",
       href: "/gd-filing",
       current: location.pathname === "/gd-filing",
