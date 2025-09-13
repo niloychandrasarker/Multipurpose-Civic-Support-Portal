@@ -210,24 +210,114 @@ const ReportDetail = () => {
           {/* Attachments */}
           {report.attachments && report.attachments.length > 0 && (
             <Card title="সংযুক্ত ফাইল">
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {report.attachments.map((file, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    className="border rounded-lg overflow-hidden bg-white shadow-sm"
                   >
-                    <div className="flex items-center space-x-3">
-                      <div className="text-2xl">
-                        {file.type === "image" ? "🖼️" : "📎"}
+                    {file.type === "image" && file.url ? (
+                      <div className="space-y-3">
+                        <div className="aspect-video bg-gray-100 relative overflow-hidden">
+                          <img
+                            src={file.url}
+                            alt={file.name}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                              e.target.nextSibling.style.display = "flex";
+                            }}
+                          />
+                          <div className="hidden w-full h-full items-center justify-center bg-gray-100">
+                            <div className="text-center">
+                              <div className="text-4xl mb-2">🖼️</div>
+                              <p className="text-sm text-gray-500">
+                                ছবি লোড হতে পারেনি
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="p-3">
+                          <p className="font-medium text-gray-900 truncate">
+                            {file.name}
+                          </p>
+                          <p className="text-sm text-gray-500">{file.size}</p>
+                          <div className="flex gap-2 mt-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => window.open(file.url, "_blank")}
+                            >
+                              👁️ দেখুন
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              📥 ডাউনলোড
+                            </Button>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{file.name}</p>
-                        <p className="text-sm text-gray-500">{file.size}</p>
+                    ) : file.type === "video" && file.url ? (
+                      <div className="space-y-3">
+                        <div className="aspect-video bg-gray-100 relative overflow-hidden">
+                          {file.thumbnail ? (
+                            <div className="relative w-full h-full">
+                              <img
+                                src={file.thumbnail}
+                                alt={file.name}
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                                <div className="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
+                                  <div className="text-2xl">▶️</div>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                              <div className="text-center">
+                                <div className="text-4xl mb-2">🎥</div>
+                                <p className="text-sm text-gray-500">
+                                  ভিডিও ফাইল
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-3">
+                          <p className="font-medium text-gray-900 truncate">
+                            {file.name}
+                          </p>
+                          <p className="text-sm text-gray-500">{file.size}</p>
+                          <div className="flex gap-2 mt-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => window.open(file.url, "_blank")}
+                            >
+                              ▶️ চালান
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              📥 ডাউনলোড
+                            </Button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <Button variant="ghost" size="sm">
-                      ডাউনলোড
-                    </Button>
+                    ) : (
+                      <div className="p-4 flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="text-2xl">📎</div>
+                          <div>
+                            <p className="font-medium text-gray-900">
+                              {file.name}
+                            </p>
+                            <p className="text-sm text-gray-500">{file.size}</p>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm">
+                          📥 ডাউনলোড
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

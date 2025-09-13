@@ -379,6 +379,79 @@ const IssueTracking = () => {
                         <p>📎 সংযুক্তি: {issue.attachments.length} টি ফাইল</p>
                       )}
                     </div>
+
+                    {/* Attachment Previews */}
+                    {issue.attachments.length > 0 && (
+                      <div className="mt-3">
+                        <div className="flex gap-2 overflow-x-auto pb-2">
+                          {issue.attachments
+                            .slice(0, 3)
+                            .map((attachment, idx) => (
+                              <div key={idx} className="flex-shrink-0">
+                                {attachment.type === "image" &&
+                                attachment.preview ? (
+                                  <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden border">
+                                    <img
+                                      src={attachment.preview}
+                                      alt={attachment.name}
+                                      className="w-full h-full object-cover cursor-pointer hover:opacity-80"
+                                      onClick={() => viewIssueDetails(issue)}
+                                      onError={(e) => {
+                                        e.target.style.display = "none";
+                                        e.target.nextSibling.style.display =
+                                          "flex";
+                                      }}
+                                    />
+                                    <div className="hidden w-full h-full items-center justify-center bg-gray-100">
+                                      <span className="text-xs">🖼️</span>
+                                    </div>
+                                  </div>
+                                ) : attachment.type === "video" &&
+                                  attachment.thumbnail ? (
+                                  <div
+                                    className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden border relative cursor-pointer hover:opacity-80"
+                                    onClick={() => viewIssueDetails(issue)}
+                                  >
+                                    <img
+                                      src={attachment.thumbnail}
+                                      alt={attachment.name}
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                                      <span className="text-white text-xs">
+                                        ▶️
+                                      </span>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="w-16 h-16 bg-gray-100 rounded-lg border flex items-center justify-center cursor-pointer hover:opacity-80"
+                                    onClick={() => viewIssueDetails(issue)}
+                                  >
+                                    <span className="text-xs">
+                                      {attachment.type === "image"
+                                        ? "🖼️"
+                                        : attachment.type === "video"
+                                        ? "🎥"
+                                        : "📎"}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          {issue.attachments.length > 3 && (
+                            <div
+                              className="w-16 h-16 bg-gray-50 rounded-lg border flex items-center justify-center cursor-pointer hover:bg-gray-100"
+                              onClick={() => viewIssueDetails(issue)}
+                            >
+                              <span className="text-xs text-gray-600">
+                                +{issue.attachments.length - 3}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex flex-col lg:items-end gap-2">
@@ -551,25 +624,104 @@ const IssueTracking = () => {
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">
                     সংযুক্তি ({selectedIssue.attachments.length})
                   </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {selectedIssue.attachments.map((attachment, index) => (
                       <div
                         key={index}
-                        className="border rounded-lg p-3 bg-gray-50"
+                        className="border rounded-lg overflow-hidden bg-white shadow-sm"
                       >
-                        <div className="flex items-center space-x-2 mb-2">
-                          <span className="text-2xl">
-                            {attachment.type === "image" ? "📷" : "🎥"}
-                          </span>
-                          <div>
-                            <p className="text-sm font-medium">
-                              {attachment.name}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {attachment.size}
-                            </p>
+                        {attachment.type === "image" && attachment.url ? (
+                          <div className="space-y-2">
+                            <div className="aspect-video bg-gray-100 relative overflow-hidden">
+                              <img
+                                src={attachment.preview || attachment.url}
+                                alt={attachment.name}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
+                                onClick={() =>
+                                  window.open(attachment.url, "_blank")
+                                }
+                                onError={(e) => {
+                                  e.target.style.display = "none";
+                                  e.target.nextSibling.style.display = "flex";
+                                }}
+                              />
+                              <div className="hidden w-full h-full items-center justify-center bg-gray-100">
+                                <div className="text-center">
+                                  <div className="text-2xl mb-1">🖼️</div>
+                                  <p className="text-xs text-gray-500">
+                                    ছবি লোড হতে পারেনি
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="p-2">
+                              <p className="text-sm font-medium text-gray-900 truncate">
+                                {attachment.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {attachment.size}
+                              </p>
+                            </div>
                           </div>
-                        </div>
+                        ) : attachment.type === "video" && attachment.url ? (
+                          <div className="space-y-2">
+                            <div className="aspect-video bg-gray-100 relative overflow-hidden">
+                              {attachment.thumbnail ? (
+                                <div
+                                  className="relative w-full h-full cursor-pointer"
+                                  onClick={() =>
+                                    window.open(attachment.url, "_blank")
+                                  }
+                                >
+                                  <img
+                                    src={attachment.thumbnail}
+                                    alt={attachment.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
+                                    <div className="w-12 h-12 bg-white bg-opacity-90 rounded-full flex items-center justify-center">
+                                      <div className="text-lg">▶️</div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div
+                                  className="w-full h-full flex items-center justify-center bg-gray-100 cursor-pointer"
+                                  onClick={() =>
+                                    window.open(attachment.url, "_blank")
+                                  }
+                                >
+                                  <div className="text-center">
+                                    <div className="text-2xl mb-1">🎥</div>
+                                    <p className="text-xs text-gray-500">
+                                      ভিডিও ফাইল
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                            <div className="p-2">
+                              <p className="text-sm font-medium text-gray-900 truncate">
+                                {attachment.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {attachment.size}
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="p-3 flex items-center space-x-2">
+                            <span className="text-xl">📎</span>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium text-gray-900 truncate">
+                                {attachment.name}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {attachment.size}
+                              </p>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

@@ -10,8 +10,22 @@ let issuesData = [
       coordinates: { lat: 23.8069, lng: 90.3688 },
     },
     attachments: [
-      { name: "road_hole_1.jpg", type: "image", size: "2.3 MB" },
-      { name: "road_hole_2.jpg", type: "image", size: "1.8 MB" },
+      {
+        name: "road_hole_1.jpg",
+        type: "image",
+        size: "2.3 MB",
+        url: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop",
+        preview:
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=100&fit=crop",
+      },
+      {
+        name: "road_hole_2.jpg",
+        type: "image",
+        size: "1.8 MB",
+        url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=500&h=300&fit=crop",
+        preview:
+          "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=150&h=100&fit=crop",
+      },
     ],
     status: "Submitted",
     priority: "High",
@@ -41,7 +55,16 @@ let issuesData = [
       address: "ধানমন্ডি ২৭, ঢাকা",
       coordinates: { lat: 23.7461, lng: 90.3742 },
     },
-    attachments: [{ name: "broken_lights.jpg", type: "image", size: "1.5 MB" }],
+    attachments: [
+      {
+        name: "broken_lights.jpg",
+        type: "image",
+        size: "1.5 MB",
+        url: "https://images.unsplash.com/photo-1536431311719-398b6704d4cc?w=500&h=300&fit=crop",
+        preview:
+          "https://images.unsplash.com/photo-1536431311719-398b6704d4cc?w=150&h=100&fit=crop",
+      },
+    ],
     status: "Under Review",
     priority: "Medium",
     category: "Public Safety",
@@ -75,7 +98,24 @@ let issuesData = [
       address: "উত্তরা সেক্টর ৭, ঢাকা",
       coordinates: { lat: 23.8759, lng: 90.3795 },
     },
-    attachments: [{ name: "water_logging.mp4", type: "video", size: "5.2 MB" }],
+    attachments: [
+      {
+        name: "water_logging.mp4",
+        type: "video",
+        size: "5.2 MB",
+        url: "https://sample-videos.com/zip/10/mp4/SampleVideo_360x240_1mb.mp4",
+        thumbnail:
+          "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=150&h=100&fit=crop",
+      },
+      {
+        name: "drainage_problem.jpg",
+        type: "image",
+        size: "2.1 MB",
+        url: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=500&h=300&fit=crop",
+        preview:
+          "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=150&h=100&fit=crop",
+      },
+    ],
     status: "In Progress",
     priority: "High",
     category: "Sanitation",
@@ -115,8 +155,22 @@ let issuesData = [
       coordinates: { lat: 23.7806, lng: 90.4193 },
     },
     attachments: [
-      { name: "garbage_pile.jpg", type: "image", size: "2.1 MB" },
-      { name: "waste_problem.jpg", type: "image", size: "1.9 MB" },
+      {
+        name: "garbage_pile.jpg",
+        type: "image",
+        size: "2.1 MB",
+        url: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=500&h=300&fit=crop",
+        preview:
+          "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=150&h=100&fit=crop",
+      },
+      {
+        name: "waste_problem.jpg",
+        type: "image",
+        size: "1.9 MB",
+        url: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=500&h=300&fit=crop",
+        preview:
+          "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=150&h=100&fit=crop",
+      },
     ],
     status: "Resolved",
     priority: "Medium",
@@ -161,7 +215,24 @@ let issuesData = [
       address: "বনানী, ঢাকা",
       coordinates: { lat: 23.7925, lng: 90.4077 },
     },
-    attachments: [],
+    attachments: [
+      {
+        name: "construction_noise.jpg",
+        type: "image",
+        size: "1.7 MB",
+        url: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=500&h=300&fit=crop",
+        preview:
+          "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=150&h=100&fit=crop",
+      },
+      {
+        name: "noise_meter.jpg",
+        type: "image",
+        size: "1.2 MB",
+        url: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=300&fit=crop",
+        preview:
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=100&fit=crop",
+      },
+    ],
     status: "Rejected",
     priority: "Low",
     category: "Noise Pollution",
