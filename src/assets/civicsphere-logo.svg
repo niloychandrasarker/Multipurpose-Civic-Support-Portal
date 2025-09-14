@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <!-- Star -->
+  <path d="M150 20 L160 50 L190 50 L170 70 L180 100 L150 80 L120 100 L130 70 L110 50 L140 50 Z" fill="#DC2626"/>
+  
+  <!-- Outer circle with people -->
+  <circle cx="150" cy="200" r="120" fill="none" stroke="#16A34A" stroke-width="8"/>
+  
+  <!-- People around circle -->
+  <circle cx="150" cy="80" r="6" fill="#16A34A"/>
+  <circle cx="220" cy="120" r="6" fill="#16A34A"/>
+  <circle cx="270" cy="200" r="6" fill="#16A34A"/>
+  <circle cx="220" cy="280" r="6" fill="#16A34A"/>
+  <circle cx="150" cy="320" r="6" fill="#16A34A"/>
+  <circle cx="80" cy="280" r="6" fill="#16A34A"/>
+  <circle cx="30" cy="200" r="6" fill="#16A34A"/>
+  <circle cx="80" cy="120" r="6" fill="#16A34A"/>
+  
+  <!-- Bangladesh map silhouette -->
+  <path d="M120 160 Q140 140 160 160 Q180 140 200 160 L190 200 Q170 220 150 200 Q130 220 110 200 Z" fill="#16A34A"/>
+  
+  <!-- Text -->
+  <text x="150" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#1E40AF">CivicSphere</text>
+</svg>

@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import CivicLogo from "./CivicLogo";
 import BangladeshFlag from "./BangladeshFlag";
+import civicSphereLogo from "../assets/CIVIC.png";
+
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -213,6 +215,17 @@ const Footer = () => {
               <p>
                 © {currentYear} Government of Bangladesh. All rights reserved.
               </p>
+              <div className="flex items-center space-x-2 mt-1">
+                <img
+                  src={civicSphereLogo}
+                  alt="CivicSphere Logo"
+                  className="h-8 w-8 object-contain"
+                />
+                
+                <span className="text-blue-400 font-medium">
+                  Developed by Team CivicSphere
+                </span>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <span>🇧🇩 Made in Bangladesh</span>
