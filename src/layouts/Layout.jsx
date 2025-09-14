@@ -52,7 +52,6 @@ const Layout = () => {
       href: "/support",
       current: location.pathname === "/support",
     },
-    { name: "Admin", href: "/admin", current: location.pathname === "/admin" },
   ];
 
   return (
