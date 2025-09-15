@@ -14,6 +14,8 @@ import Profile from "./pages/Profile";
 import IssueReporting from "./pages/IssueReporting";
 import IssueTracking from "./pages/IssueTracking";
 import ReportDetail from "./pages/ReportDetail";
+import TransparencyDashboard from "./pages/TransparencyDashboard";
+import TransparencyDetailPage from "./pages/TransparencyDetailPage";
 import "./App.css";
 
 function App() {
@@ -25,6 +27,19 @@ function App() {
           <Route path="dashboard" element={<CitizenDashboard />} />
           <Route path="report-issue" element={<IssueReporting />} />
           <Route path="issues" element={<IssueTracking />} />
+          <Route path="transparency" element={<TransparencyDashboard />} />
+          <Route
+            path="transparency/:section"
+            element={<TransparencyDetailPage />}
+          />
+          <Route
+            path="transparency/:section/:id"
+            element={<TransparencyDetailPage />}
+          />
+          <Route
+            path="transparency/:section/:category/:id"
+            element={<TransparencyDetailPage />}
+          />
           <Route path="gd-filing" element={<GDFiling />} />
           <Route path="case-tracking" element={<CaseTracking />} />
           <Route path="fine-payment" element={<FinePayment />} />

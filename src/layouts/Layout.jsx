@@ -28,6 +28,11 @@ const Layout = () => {
       current: location.pathname === "/issues",
     },
     {
+      name: "OpenGovt Lens",
+      href: "/transparency",
+      current: location.pathname === "/transparency",
+    },
+    {
       name: "GD Filing",
       href: "/gd-filing",
       current: location.pathname === "/gd-filing",
